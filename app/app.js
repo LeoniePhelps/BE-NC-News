@@ -2,14 +2,14 @@ const express = require("express");
 const app = express();
 const {
   getTopics,
-  getArticlesById,
+  getArticleById,
 } = require("../controllers/nc_news_controller");
 
 //app.use(express.json())
 
 app.get("/api/topics", getTopics);
 
-app.get("/api/articles/:article_id", getArticlesById);
+app.get("/api/articles/:article_id", getArticleById);
 
 //////////////////////////////////////////
 
