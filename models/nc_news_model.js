@@ -20,3 +20,17 @@ exports.selectArticleById = (articleId) => {
       return article;
     });
 };
+
+exports.updateArticleVotesById = (articleId, updateVotes) => {
+  if (updateVotes === undefined) {
+    return Promise.reject({ status: 400, msg: "Missing required fields" });
+  }
+  return db
+    .query(
+      "UPDATE articles SET votes = votes + $2 WHERE article_id=$1 RETURNING *;",
+      [articleId, updateVotes]
+    )
+    .then((res) => {
+      return res.rows[0];
+    });
+};

@@ -81,3 +81,59 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("status:200 should update the votes property of an article by increasing the votes", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toBeInstanceOf(Object);
+        expect(body.votes).toBe(101);
+      });
+  });
+  test("status:200 should respond with the updated article", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article_id).toBe(1);
+        expect(body.title).toEqual(expect.any(String));
+        expect(body.topic).toEqual(expect.any(String));
+        expect(body.author).toEqual(expect.any(String));
+        expect(body.body).toEqual(expect.any(String));
+        expect(body.created_at).toEqual(expect.any(String));
+        expect(body.votes).toEqual(expect.any(Number));
+      });
+  });
+  test("status:200 should update the votes property of an article by decreasing the votes", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: -100 })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article_id).toBe(1);
+        expect(body.votes).toBe(0);
+      });
+  });
+  test("status:400 responds with an error when request is missing required fields", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Missing required fields");
+      });
+  });
+  test("status:400 responds with an error when request violates schema", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: "notNumber" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
+});

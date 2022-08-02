@@ -8,15 +8,17 @@ const {
 const {
   getTopics,
   getArticleById,
+  patchArticleVotesById,
 } = require("../controllers/nc_news_controller");
 
-//app.use(express.json())
+app.use(express.json())
 
 ////////////////// ENDPOINTS //////////////////
 
 app.get("/api/topics", getTopics);
-
 app.get("/api/articles/:article_id", getArticleById);
+
+app.patch("/api/articles/:article_id", patchArticleVotesById);
 
 ////////////////// ERROR HANDLING //////////////////
 
