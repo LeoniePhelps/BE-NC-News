@@ -80,6 +80,14 @@ describe("GET /api/articles/:article_id", () => {
         expect(body.msg).toBe("Invalid input");
       });
   });
+  test("status:200 responds with comment count as a property of the requested article object", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comment_count).toBe(11);
+      });
+  });
 });
 
 describe("PATCH /api/articles/:article_id", () => {
