@@ -22,7 +22,7 @@ describe("GET /api/topics", () => {
         expect(topics).toBeInstanceOf(Array);
       });
   });
-  test("array of topics should have objects with keys of 'slug' and 'description", () => {
+  test("array of topics should have correct object keys", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
@@ -99,7 +99,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send({ inc_votes: 1 })
       .expect(200)
       .then(({ body }) => {
-        expect(body.article_id).toBe(1);
+        expect(body.article_id).toEqual(1);
         expect(body.title).toEqual(expect.any(String));
         expect(body.topic).toEqual(expect.any(String));
         expect(body.author).toEqual(expect.any(String));
@@ -134,6 +134,32 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid input");
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("status:200 responds with an array of users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        expect(users.length).toBeGreaterThan(1);
+        expect(users).toBeInstanceOf(Array);
+      });
+  });
+  test("array of users should have correct object keys", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body: { users } }) => {
+        users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
       });
   });
 });
