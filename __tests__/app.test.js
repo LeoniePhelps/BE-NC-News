@@ -90,7 +90,6 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body).toBeInstanceOf(Object);
-        expect(body.article_id).toBe(1);
         expect(body.votes).toBe(101);
       });
   });
@@ -100,15 +99,13 @@ describe("PATCH /api/articles/:article_id", () => {
       .send({ inc_votes: 1 })
       .expect(200)
       .then(({ body }) => {
-        expect(body).toMatchObject({
-          article_id: 1,
-          title: "Living in the shadow of a great man",
-          topic: "mitch",
-          author: "butter_bridge",
-          body: "I find this existence challenging",
-          created_at: "2020-07-09T20:11:00.000Z",
-          votes: 101,
-        });
+        expect(body.article_id).toBe(1);
+        expect(body.title).toEqual(expect.any(String));
+        expect(body.topic).toEqual(expect.any(String));
+        expect(body.author).toEqual(expect.any(String));
+        expect(body.body).toEqual(expect.any(String));
+        expect(body.created_at).toEqual(expect.any(String));
+        expect(body.votes).toEqual(expect.any(Number));
       });
   });
   test("status:200 should update the votes property of an article by decreasing the votes", () => {
