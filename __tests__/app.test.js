@@ -99,7 +99,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send({ inc_votes: 1 })
       .expect(200)
       .then(({ body }) => {
-        expect(body.article_id).toEqual(1);
+        expect(body.article_id).toBe(1);
         expect(body.title).toEqual(expect.any(String));
         expect(body.topic).toEqual(expect.any(String));
         expect(body.author).toEqual(expect.any(String));
@@ -144,7 +144,7 @@ describe("GET /api/users", () => {
       .get("/api/users")
       .expect(200)
       .then(({ body: { users } }) => {
-        expect(users.length).toBeGreaterThan(1);
+        expect(users.length).toBe(4);
         expect(users).toBeInstanceOf(Array);
       });
   });
