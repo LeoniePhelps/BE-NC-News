@@ -38,7 +38,7 @@ describe("GET /api/topics", () => {
 });
 
 describe("ERROR HANDLING", () => {
-  test("status:404, responds with an error when passed a route that does not exist", () => {
+  test("status:404 responds with an error when requested route does not exist", () => {
     return request(app)
       .get("/api/ttooppiiccss")
       .expect(404)
@@ -48,24 +48,36 @@ describe("ERROR HANDLING", () => {
   });
 });
 
-//test all endpoints for errors
-
 describe("GET /api/articles/:article_id", () => {
-  test("status:200 responds with the correct article object", () => {
+  test("status:200 responds with requested article object", () => {
     return request(app)
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
         expect(body).toBeInstanceOf(Object);
-        expect(body).toEqual({
-          article_id: 1,
-          title: "Living in the shadow of a great man",
-          topic: "mitch",
-          author: "butter_bridge",
-          body: "I find this existence challenging",
-          created_at: "2020-07-09T20:11:00.000Z",
-          votes: 100,
-        });
+        expect(body.article_id).toBe(1);
+        expect(body.title).toEqual(expect.any(String));
+        expect(body.topic).toEqual(expect.any(String));
+        expect(body.author).toEqual(expect.any(String));
+        expect(body.body).toEqual(expect.any(String));
+        expect(body.created_at).toEqual(expect.any(String));
+        expect(body.votes).toEqual(expect.any(Number));
+      });
+  });
+  test("status:404 responds with an error when requested article does not exist", () => {
+    return request(app)
+      .get("/api/articles/99999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("This article does not exist");
+      });
+  });
+  test("status:400 responds with an error when request is an invalid input", () => {
+    return request(app)
+      .get("/api/articles/notAnId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
       });
   });
 });
