@@ -1,20 +1,31 @@
 const express = require("express");
 const app = express();
-const { getTopics } = require("../controllers/nc_news_controller");
+const {
+  handleCustomErrors,
+  handlePsqlErrors,
+  handleServerErrors,
+} = require("./errors");
+const {
+  getTopics,
+  getArticleById,
+} = require("../controllers/nc_news_controller");
 
 //app.use(express.json())
 
+////////////////// ENDPOINTS //////////////////
+
 app.get("/api/topics", getTopics);
 
-//////////////////////////////////////////
+app.get("/api/articles/:article_id", getArticleById);
+
+////////////////// ERROR HANDLING //////////////////
 
 app.all("*", (req, res) => {
-  res.status(404).send({ msg: "Not Found" });
+  res.status(404).send({ msg: "This route does not exist" });
 });
 
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(500).send({ msg: "Internal Server Error" });
-});
+app.use(handleCustomErrors);
+app.use(handlePsqlErrors);
+app.use(handleServerErrors);
 
 module.exports = app;
