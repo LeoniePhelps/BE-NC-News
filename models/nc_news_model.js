@@ -8,7 +8,10 @@ exports.selectTopics = () => {
 
 exports.selectArticleById = (articleId) => {
   return db
-    .query("SELECT * FROM articles WHERE article_id=$1;", [articleId])
+    .query(
+      "SELECT articles.*, COUNT(comment_id) AS comment_count FROM articles JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id=$1 GROUP BY articles.article_id",
+      [articleId]
+    )
     .then(({ rows }) => {
       const article = rows[0];
       if (!article) {
@@ -17,6 +20,8 @@ exports.selectArticleById = (articleId) => {
           msg: "This article does not exist",
         });
       }
+      article.comment_count = Number(article.comment_count);
+      console.log(article);
       return article;
     });
 };
