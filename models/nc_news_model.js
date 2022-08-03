@@ -9,7 +9,7 @@ exports.selectTopics = () => {
 exports.selectArticleById = (articleId) => {
   return db
     .query(
-      "SELECT articles.*, COUNT(comment_id) AS comment_count FROM articles JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id=$1 GROUP BY articles.article_id",
+      "SELECT articles.*, COUNT(comment_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id=$1 GROUP BY articles.article_id",
       [articleId]
     )
     .then(({ rows }) => {
@@ -21,7 +21,6 @@ exports.selectArticleById = (articleId) => {
         });
       }
       article.comment_count = Number(article.comment_count);
-      console.log(article);
       return article;
     });
 };
