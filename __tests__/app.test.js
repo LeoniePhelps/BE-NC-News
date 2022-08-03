@@ -85,7 +85,8 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then(({ body }) => {
-        expect(body.comment_count).toBe(11);
+          expect(body.comment_count).toBe(11);
+          expect(body.comment_count).toEqual(expect.any(Number));
       });
   });
 });
