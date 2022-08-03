@@ -3,6 +3,7 @@ const {
   selectArticleById,
   updateArticleVotesById,
   selectUsers,
+  selectArticles,
 } = require("../models/nc_news_model");
 
 exports.getTopics = (req, res, next) => {
@@ -36,6 +37,14 @@ exports.getUsers = (req, res, next) => {
   selectUsers()
     .then((users) => {
       res.status(200).send({ users });
+    })
+    .catch(next);
+};
+
+exports.getArticles = (req, res, next) => {
+  selectArticles()
+    .then((articles) => {
+      res.status(200).send({ articles });
     })
     .catch(next);
 };
