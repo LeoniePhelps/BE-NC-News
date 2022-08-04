@@ -216,7 +216,7 @@ describe("GET /api/articles/:article_id/comments", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
-        .then(({body: comments}) => {
+      .then(({ body: comments }) => {
         expect(comments).toBeInstanceOf(Array);
       });
   });
@@ -225,14 +225,12 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body: comments }) => {
-        comments.forEach((comment) => {
-          expect(comment).toMatchObject({
-            comment_id: expect.any(Number),
-            body: expect.any(String),
-            author: expect.any(String),
-            votes: expect.any(Number),
-            created_at: expect.any(String),
-          });
+        expect(comments[0]).toMatchObject({
+          comment_id: expect.any(Number),
+          body: expect.any(String),
+          author: expect.any(String),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
         });
       });
   });
