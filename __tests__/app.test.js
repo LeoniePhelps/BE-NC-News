@@ -268,10 +268,10 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(201)
       .then(({ body: comment }) => {
         expect(comment).toBeInstanceOf(Array);
+        expect(comment[0].article_id).toBe(2);
         expect(comment[0]).toMatchObject({
           comment_id: expect.any(Number),
           body: expect.any(String),
-          article_id: expect.any(Number),
           author: expect.any(String),
           votes: expect.any(Number),
           created_at: expect.any(String),
