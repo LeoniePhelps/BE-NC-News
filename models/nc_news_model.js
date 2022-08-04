@@ -57,10 +57,4 @@ exports.selectArticles = (sortBy = "created_at") => {
   }
 };
 
-//   const validSortBy = ["created_at"];
-//   if (validSortBy.includes(sortBy)) {
-//GROUP BY articles.article_id ORDER BY ${sortBy} DESC;`
-//       db.query(
-//    `SELECT article_id, title, topic, author, created_at, votes FROM articles ORDER BY ${sortBy} DESC;`
-//       )
-// };
+
