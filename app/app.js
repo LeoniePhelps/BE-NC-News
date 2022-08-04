@@ -12,6 +12,7 @@ const {
   getUsers,
   getArticles,
   getCommentsByArticleId,
+  postCommentByArticleId,
 } = require("../controllers/nc_news_controller");
 
 app.use(express.json());
@@ -25,6 +26,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.patch("/api/articles/:article_id", patchArticleVotesById);
+
+app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
 ////////////////// ERROR HANDLING //////////////////
 
