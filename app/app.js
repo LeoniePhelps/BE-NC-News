@@ -10,6 +10,7 @@ const {
   getArticleById,
   patchArticleVotesById,
   getUsers,
+  getArticles,
 } = require("../controllers/nc_news_controller");
 
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.get("/api/topics", getTopics);
 app.get("/api/users", getUsers);
+app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.patch("/api/articles/:article_id", patchArticleVotesById);

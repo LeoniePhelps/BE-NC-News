@@ -3,6 +3,7 @@ const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
 const data = require("../db/data/test-data/index");
+const jestSorted = require("jest-sorted");
 
 beforeEach(() => {
   return seed(data);
@@ -22,7 +23,7 @@ describe("GET /api/topics", () => {
         expect(topics).toBeInstanceOf(Array);
       });
   });
-  test("array of topics should have correct object keys", () => {
+  test("status:200 array of topics should have correct object keys", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
@@ -40,7 +41,7 @@ describe("GET /api/topics", () => {
 describe("ERROR HANDLING", () => {
   test("status:404 responds with an error when requested route does not exist", () => {
     return request(app)
-      .get("/api/ttooppiiccss")
+      .get("/api/notAPath")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("This route does not exist");
@@ -156,7 +157,7 @@ describe("GET /api/users", () => {
         expect(users).toBeInstanceOf(Array);
       });
   });
-  test("array of users should have correct object keys", () => {
+  test("status:200 array of users should have correct object keys", () => {
     return request(app)
       .get("/api/users")
       .expect(200)
@@ -171,3 +172,42 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+describe("GET /api/articles", () => {
+  test("status:200 responds with an array of articles", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBeGreaterThan(1);
+        expect(articles).toBeInstanceOf(Array);
+      });
+  });
+  test("status:200 responds with articles sorted by date descending", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("status:200 array of articles should have correct object keys", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(Number),
+          });
+        });
+      });
+  });
+});
+
