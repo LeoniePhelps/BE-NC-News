@@ -4,6 +4,7 @@ const {
   updateArticleVotesById,
   selectUsers,
   selectArticles,
+  selectCommentsByArticleId,
 } = require("../models/nc_news_model");
 
 exports.getTopics = (req, res, next) => {
@@ -45,6 +46,18 @@ exports.getArticles = (req, res, next) => {
   selectArticles()
     .then((articles) => {
       res.status(200).send({ articles });
+    })
+    .catch(next);
+};
+
+exports.getCommentsByArticleId = (req, res, next) => {
+  const articleId = req.params.article_id;
+  selectArticleById(articleId)
+    .then(() => {
+      return selectCommentsByArticleId(articleId);
+    })
+    .then((comments) => {
+      res.status(200).send(comments);
     })
     .catch(next);
 };

@@ -52,9 +52,21 @@ exports.selectArticles = (sortBy = "created_at") => {
         `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, CAST(COUNT(comment_id) AS INT) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY ${sortBy} DESC;`
       )
       .then(({ rows }) => {
-        return(rows);
+        return rows;
       });
   }
 };
 
-
+exports.selectCommentsByArticleId = (articleId) => {
+  return db
+    .query(
+      "SELECT comment_id, body, author, votes, created_at FROM comments WHERE article_id=$1",
+      [articleId]
+    )
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({ status: 200, msg: "No comments" });
+      }
+      return rows;
+    });
+};
