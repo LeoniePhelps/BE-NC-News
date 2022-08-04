@@ -5,6 +5,7 @@ const {
   selectUsers,
   selectArticles,
   selectCommentsByArticleId,
+  insertCommentByArticleId,
 } = require("../models/nc_news_model");
 
 exports.getTopics = (req, res, next) => {
@@ -58,6 +59,16 @@ exports.getCommentsByArticleId = (req, res, next) => {
     })
     .then((comments) => {
       res.status(200).send(comments);
+    })
+    .catch(next);
+};
+
+exports.postCommentByArticleId = (req, res, next) => {
+  const articleId = req.params.article_id;
+  const insertComment = req.body;
+  insertCommentByArticleId(articleId, insertComment)
+    .then((comment) => {
+      res.status(201).send(comment);
     })
     .catch(next);
 };
