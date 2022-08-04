@@ -259,3 +259,41 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("status:201 responds with the posted comment array with the correct object keys", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({ body: "comment", username: "butter_bridge" })
+      .expect(201)
+      .then(({ body: comment }) => {
+        expect(comment).toBeInstanceOf(Array);
+        expect(comment[0]).toMatchObject({
+          comment_id: expect.any(Number),
+          body: expect.any(String),
+          article_id: expect.any(Number),
+          author: expect.any(String),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+        });
+      });
+  });
+  test("status:400 responds with an error when request is an invalid input", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({ body: 9999, username: 9999 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
+  test("status:400 responds with an error when request is missing required fields", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Missing required fields");
+      });
+  });
+});
