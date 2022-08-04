@@ -211,3 +211,53 @@ describe("GET /api/articles", () => {
   });
 });
 
+describe("GET /api/articles/:article_id/comments", () => {
+  test("status:200 responds with an array of comments for the requested article", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+        .then(({body: comments}) => {
+        expect(comments).toBeInstanceOf(Array);
+      });
+  });
+  test("status:200 array of comments should have correct object keys", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body: comments }) => {
+        comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            body: expect.any(String),
+            author: expect.any(String),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+          });
+        });
+      });
+  });
+  test("status:200 responds with an empty array when requested article has no comments", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("No comments");
+      });
+  });
+  test("status:400 responds with an error when request is an invalid input", () => {
+    return request(app)
+      .get("/api/articles/notAnId/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
+  test("status:404 responds with an error when requested article does not exist", () => {
+    return request(app)
+      .get("/api/articles/99999999/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("This article does not exist");
+      });
+  });
+});
