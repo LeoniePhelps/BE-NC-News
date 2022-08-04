@@ -70,3 +70,14 @@ exports.selectCommentsByArticleId = (articleId) => {
       return rows;
     });
 };
+
+exports.insertCommentByArticleId = (articleId, insertComment) => {
+  return db
+    .query(
+      "INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3) RETURNING *;",
+      [insertComment.body, insertComment.username, articleId]
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};
