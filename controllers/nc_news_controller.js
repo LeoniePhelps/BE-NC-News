@@ -6,6 +6,7 @@ const {
   selectArticles,
   selectCommentsByArticleId,
   insertCommentByArticleId,
+  removeCommentById,
 } = require("../models/nc_news_model");
 
 exports.getTopics = (req, res, next) => {
@@ -70,6 +71,15 @@ exports.postCommentByArticleId = (req, res, next) => {
   insertCommentByArticleId(articleId, insertComment)
     .then((comment) => {
       res.status(201).send(comment);
+    })
+    .catch(next);
+};
+
+exports.deleteCommentById = (req, res, next) => {
+  const commentId = req.params.comment_id;
+  removeCommentById(commentId)
+    .then(() => {
+      res.sendStatus(204);
     })
     .catch(next);
 };

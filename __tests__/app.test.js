@@ -360,3 +360,25 @@ describe("GET /api/articles QUERIES", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("status:204 responds with status when comment is deleted by comment id", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+  test("status:404 responds with error message when comment id does not exist", () => {
+    return request(app)
+      .delete("/api/comments/999999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("This comment does not exist");
+      });
+  });
+  test("status:404 responds with error message when comment id is invalid", () => {
+    return request(app)
+      .delete("/api/comments/notACommentId")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input");
+      });
+  });
+});
