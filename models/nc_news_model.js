@@ -44,17 +44,21 @@ exports.selectUsers = () => {
   });
 };
 
-exports.selectArticles = (sortBy = "created_at") => {
-  const validSortBy = ["created_at"];
-  if (validSortBy.includes(sortBy)) {
-    return db
-      .query(
-        `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, CAST(COUNT(comment_id) AS INT) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY ${sortBy} DESC;`
-      )
-      .then(({ rows }) => {
-        return rows;
-      });
+exports.selectArticles = (sortBy = "created_at", order = "DESC", topic) => {
+  const queryValues = [];
+  let queryStr = `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, CAST(COUNT(comment_id) AS INT) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id `;
+
+  if (topic) {
+    queryStr += `WHERE articles.topic =$1`;
+    queryValues.push(topic);
   }
+
+  queryStr += ` GROUP BY articles.article_id `;
+
+  return db.query(queryStr, queryValues).then(({ rows }) => {
+    console.log(rows);
+    return rows;
+  });
 };
 
 exports.selectCommentsByArticleId = (articleId) => {

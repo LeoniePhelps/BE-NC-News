@@ -234,7 +234,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         });
       });
   });
-  test("status:200 responds with an empty array when requested article has no comments", () => {
+  test("status:200 responds with an message when requested article has no comments", () => {
     return request(app)
       .get("/api/articles/2/comments")
       .expect(200)
@@ -294,6 +294,69 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Missing required fields");
+      });
+  });
+});
+
+describe("GET /api/articles QUERIES", () => {
+  test("status:200 responds with articles filtered by specified topic with default order and sort by", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toHaveLength(11);
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+        articles.forEach((article) => {
+          expect(article.topic).toEqual("mitch");
+        });
+      });
+  });
+  test("status:200 responds with articles in ASC order sorted by default", () => {
+    return request(app)
+      .get("/api/articles?order=ASC")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("created_at", { ascending: true });
+      });
+  });
+  test("status:200 responds with articles sorted by specified valid column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("author", { descending: true });
+      });
+  });
+  test("status:200 responds with message when request is a valid topic with no articles", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("No articles");
+      });
+  });
+  test("status:400 responds with error message when request has an invalid order", () => {
+    return request(app)
+      .get("/api/articles?order=RANDOM")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("Invalid order");
+      });
+  });
+  test("status:404 responds with error message when request has an invalid topic", () => {
+    return request(app)
+      .get("/api/articles?topic=notATopic")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("Invalid topic");
+      });
+  });
+  test("status:400 responds with error message when specified sort by is an invalid column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=notAValidColumn")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("Invalid sort by");
       });
   });
 });
