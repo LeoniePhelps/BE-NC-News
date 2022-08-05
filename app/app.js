@@ -20,6 +20,7 @@ app.use(express.json());
 
 ////////////////// ENDPOINTS //////////////////
 
+app.get("/api");
 app.get("/api/topics", getTopics);
 app.get("/api/users", getUsers);
 app.get("/api/articles", getArticles);
