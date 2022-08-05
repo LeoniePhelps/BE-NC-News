@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { reduceRight } = require("../db/data/test-data/articles");
 
 exports.selectTopics = () => {
   return db.query("SELECT * FROM topics;").then(({ rows }) => {
@@ -45,6 +46,20 @@ exports.selectUsers = () => {
 };
 
 exports.selectArticles = (sortBy = "created_at", order = "DESC", topic) => {
+  if (!["DESC", "ASC"].includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid order" });
+  }
+  if (topic && !["mitch", "cats", "paper"].includes(topic)) {
+    return Promise.reject({ status: 404, msg: "Invalid topic" });
+  }
+  if (
+    !["article_id", "title", "topic", "author", "created_at", "votes"].includes(
+      sortBy
+    )
+  ) {
+    return Promise.reject({ status: 400, msg: "Invalid sort by" });
+  }
+
   const queryValues = [];
   let queryStr = `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, CAST(COUNT(comment_id) AS INT) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id `;
 
@@ -53,10 +68,12 @@ exports.selectArticles = (sortBy = "created_at", order = "DESC", topic) => {
     queryValues.push(topic);
   }
 
-  queryStr += ` GROUP BY articles.article_id `;
+  queryStr += ` GROUP BY articles.article_id ORDER BY ${sortBy} ${order};`;
 
   return db.query(queryStr, queryValues).then(({ rows }) => {
-    console.log(rows);
+    if (!rows.length) {
+      return Promise.reject({ status: 200, msg: "No articles" });
+    }
     return rows;
   });
 };
