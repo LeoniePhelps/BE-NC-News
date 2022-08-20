@@ -41,8 +41,9 @@ Once you have created a local copy of this repository, you will need to install 
 
 - jest `npm install -d jest`
 - jest-sorted `npm install -d jest-sorted`
-- pg-format `npm install -d pg-format`
 - supertest `npm install -d supertest`
+- pg `npm install pg`
+- pg-format `npm install pg-format`
 - express `npm install express`
 - dotenv `npm install dotenv`
 - nodemon `npm install nodemon`
