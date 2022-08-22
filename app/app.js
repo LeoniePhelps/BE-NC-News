@@ -16,7 +16,9 @@ const {
   deleteCommentById,
   getEndpoints,
 } = require("../controllers/nc_news_controller");
+const cors = require("cors");
 
+app.use(cors());
 app.use(express.json());
 
 ////////////////// ENDPOINTS //////////////////
