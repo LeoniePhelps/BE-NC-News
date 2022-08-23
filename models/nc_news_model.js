@@ -49,9 +49,9 @@ exports.selectArticles = (sortBy = "created_at", order = "DESC", topic) => {
   if (!["DESC", "ASC"].includes(order)) {
     return Promise.reject({ status: 400, msg: "Invalid order" });
   }
-  if (topic && !["mitch", "cats", "paper"].includes(topic)) {
-    return Promise.reject({ status: 404, msg: "Invalid topic" });
-  }
+  // if (topic && !["mitch", "cats", "paper"].includes(topic)) {
+  //   return Promise.reject({ status: 404, msg: "Invalid topic" });
+  // }
   if (
     !["article_id", "title", "topic", "author", "created_at", "votes"].includes(
       sortBy
