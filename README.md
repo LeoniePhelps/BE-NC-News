@@ -13,9 +13,9 @@ Northcoders news is an API designed as the backend for a news app. The API inter
 
 ## Hosted Version
 
-Northcoders News is hosted on Heroku, you can find it here:
+Northcoders News is hosted on Railway.app, you can find it here:
 
-https://leonie-phelps-nc-news-be.herokuapp.com/api
+https://be-nc-news-production.up.railway.app/api
 
 The first page displays a list of available endpoints and their description.  
 To make POST, PATCH or DELETE requests please use insomnia, available here: https://insomnia.rest
